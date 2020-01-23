@@ -2,28 +2,32 @@
 #include <time.h>
 #include <stdlib.h>
 #include <string.h>
+#include <locale.h>
 #define tam 50
-void Facil (int[], int[], int);
-void Medio (int[], int[], int);
-void Dificil (int[], int[], int);
-void Puntuacion (char[][20], int[], int[]);
-void Ingreso (char[], char[][20], int[], int[], int);
-void OrdenaDatos (char[][20],int[], int[]);
-
+void Facil (int puntos[tam], int dificultad[tam], int count);
+void Medio (int puntos[tam], int dificultad[tam], int count);
+void Dificil (int puntos[tam], int dificultad[tam], int count);
+void Puntuacion (char usuario[tam][20], int puntos[tam], int dificultad[tam]);
+void Ingreso (char pin[10], char usuario[tam][20], int puntos[tam], int dificultad[tam], int count);
+void OrdenaDatos (char usuario[tam][20], int puntos[tam], int dificultad[tam]);
+void EliminaDatos (char usuario[tam][20], int puntos[tam], int dificultad[tam]);
+void ModificaDatos (char usuario[tam][20], int puntos[tam], int dificultad[tam]);
+FILE *archivo;
 void main()
 {
     int op, count=0, puntos[tam]={0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}, dificultad[tam]={0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
     char usuario[tam][20], pin[10];
     char FAC[10]={"FACIL"}, MED[10]="MEDI", DIF[10]="DIFI";
+    setlocale(LC_ALL,"spanish");
     do
     {
-        printf("MENU\n1)Empezar\n2)Puntuacion\n3)Salir\nEscoja una opcion: ");
+        printf("MENU\n1)Empezar\n2)Puntuación\n3)Salir\nEscoja una opción: ");
         scanf("%d",&op);
         switch(op)
         {
         	case 1:
         		
-        		printf("Para escoger una dificultad, escriba su usario y uno d los tres siguientes codigos:\n");
+        		printf("Para escoger una dificultad, escriba su usario y uno de los tres siguientes códigos:\n");
                 printf("Facil: FACIL\nMedio:MEDI\nDificil: DIFI\n");
                 printf("Nombre de usuario: ");
                 fflush(stdin);
@@ -57,7 +61,7 @@ void main()
             	exit(0);
             break;
             default:
-            	printf("Opcion no valida, regresando a MENU...");
+            	printf("Opción no valida, regresando a MENU...");
             	getch();
             	system("cls");
             break;
@@ -69,17 +73,17 @@ void Ingreso (char pin[10], char usuario[tam][20],int puntos[tam], int dificulta
 {
     if(strcmp(pin,"FACIL")==0)
     {
-    	printf("Ha elegido la dificultad FACIL");
+    	printf("Ha elegido la dificultad FACIL\n");
         Facil(puntos, dificultad, count);
     }
     else if (strcmp(pin,"MEDI")==0)
     {
-        printf("Ha elegido la dificultad MEDIA");
+        printf("Ha elegido la dificultad MEDIA\n");
         Medio(puntos, dificultad, count);
     }
     else if (strcmp(pin,"DIFI")==0)
     {
-        printf("Ha elegido la dificultad DIFICIL");
+        printf("Ha elegido la dificultad DIFICIL\n");
         Dificil(puntos, dificultad, count);
     }
     main();
@@ -432,7 +436,7 @@ void Medio (int puntos[tam], int dificultad[tam], int count)
 	
 	Selrand=rand()%40;
 	k=Selrand;
-		for (i=0;i<20;i++)
+	for (i=0;i<20;i++)
 	{
 		if(k>40)
 		{
@@ -464,8 +468,12 @@ void Puntuacion (char usuario[tam][20],int puntos[tam], int dificultad[tam])
 {
 	int op, i;
 	char DIF[30];
+	archivo=fopen("Puntuacion.txt","w");
 	do
 	{
+		OrdenaDatos(usuario, puntos, dificultad);
+		printf("\tNOMBRE\t\tDIFICULTAD\t\tPUNTUACION\n\n");
+		fputs("\n\tNOMBRE\t\tDIFICULTAD\t\tPUNTUACION\n\n",archivo);
 		for(i=0;i<10;i++)
 		{
 			if(dificultad[i]==0)
@@ -484,18 +492,20 @@ void Puntuacion (char usuario[tam][20],int puntos[tam], int dificultad[tam])
 			{
 				strcpy(DIF,"DIFICIL");
 			}
-			printf("\tNOMBRE\t\tDIFICULTAD\t\tPUNTUACION\n\n");
-			printf("\t%s\t\t%s\t\t%d",usuario[i],DIF,puntos[i]);
+			printf("%d.-\t%s\t\t%s\t\t%d\n",i+1,usuario[i],DIF,puntos[i]);
+			fprintf(archivo,"%d.-\t%s\t\t%s\t\t%d\n",i+1,usuario[i],DIF,puntos[i]);
 		}
-		printf("\nQue accion desea realizar\n1. cambiar nombre de usuario\n2.Eliminar puntuacion\n3.regresar al menu\nEleccion: ");
+		printf("\nQue acción desea realizar\n1. Modificar Datos\n2.Eliminar Datos\n3.Regresar al menu\nElección: ");
 		scanf("%d",&op);
 		switch (op)
 		{
 			case 1:
+				ModificaDatos(usuario, puntos, dificultad);
 				getch();
 				system("cls");
         	break;
         	case 2:
+        		EliminaDatos(usuario, puntos, dificultad);
         		getch();
 				system("cls");
 			break;
@@ -504,22 +514,23 @@ void Puntuacion (char usuario[tam][20],int puntos[tam], int dificultad[tam])
 				system("cls");
 			break;
 			default:
-				printf("Por favor ingrese una opcion valida.");
+				printf("Por favor ingrese una opción valida.");
 				getch();
 				system("cls");
 			break;
 		}
 	}while(op!=3);
+	fclose(archivo);
 }
 void OrdenaDatos (char usuario[][20],int puntos[], int dificultad[])
 {
 	char USU[20];
-    int cont=0,num,i,j=0,k;
+    int num,i,j;
     for (i=0;i<tam;i++)
     {
     	for(j=0;j<tam;j++)
     	{
-    		if (puntos[j]>puntos[i])
+    		if (puntos[j]<puntos[i])
     		{
     			num=puntos[i];
     			puntos[i]=puntos[j];
@@ -533,4 +544,70 @@ void OrdenaDatos (char usuario[][20],int puntos[], int dificultad[])
 			}
 		}    
 	}
+}
+void EliminaDatos (char usuario[tam][20], int puntos[tam], int dificultad[tam])
+{
+	int op, i;
+	char DIF[30];
+	printf("\tNOMBRE\t\tDIFICULTAD\t\tPUNTUACION\n\n");
+	for(i=0;i<10;i++)
+	{
+		if(dificultad[i]==0)
+		{
+			strcpy(DIF,"INDEFINIDO");
+		}
+		else if(dificultad[i]==1)
+		{
+			strcpy(DIF,"FACIL");
+		}
+		else if (dificultad[i]==2)
+		{
+			strcpy(DIF,"MEDIO");
+		}
+		else
+		{
+			strcpy(DIF,"DIFICIL");
+		}
+		printf("%d.-\t%s\t\t%s\t\t%d\n",i+1,usuario[i],DIF,puntos[i]);
+	}
+	printf("¿Cuál de los datos desea eliminar?\n");
+	scanf("%d",&op);
+	op=op-1;
+	strcpy(usuario[op],"INDEF");
+	puntos[op]=0;
+	dificultad[op]=0;
+	printf("Los datos de la posición %d han sido eliminados...",op+1);
+}
+void ModificaDatos (char usuario[tam][20], int puntos[tam], int dificultad[tam])
+{
+	int op, i;
+	char DIF[30];
+	printf("\tNOMBRE\t\tDIFICULTAD\t\tPUNTUACION\n\n");
+	for(i=0;i<10;i++)
+	{
+		if(dificultad[i]==0)
+		{
+			strcpy(DIF,"INDEFINIDO");
+		}
+		else if(dificultad[i]==1)
+		{
+			strcpy(DIF,"FACIL");
+		}
+		else if (dificultad[i]==2)
+		{
+			strcpy(DIF,"MEDIO");
+		}
+		else
+		{
+			strcpy(DIF,"DIFICIL");
+		}
+		printf("%d.-\t%s\t\t%s\t\t%d\n",i+1,usuario[i],DIF,puntos[i]);
+	}
+	printf("¿Cuál de los datos desea modificar? \n");
+	scanf("%d",&op);
+	op=op-1;
+	printf("Ingrese un nuevo usuario: ");
+	fflush(stdin);
+	gets(usuario[op]);
+	printf("El usuario de la posición %d ha sido modificado...",op+1);
 }
