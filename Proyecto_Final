@@ -535,5 +535,5 @@ void OrdenaDatos (char usuario[][20],int puntos[], int dificultad[])
    			usuario[i]=USU;
 		}
 	}    
-}
+   }
 }
