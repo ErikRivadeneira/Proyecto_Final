@@ -1,0 +1,539 @@
+#include <stdio.h>
+#include <time.h>
+#include <stdlib.h>
+#include <string.h>
+#define tam 50
+void Facil (int[], int[], int);
+void Medio (int[], int[], int);
+void Dificil (int[], int[], int);
+void Puntuacion (char[][20], int[], int[]);
+void Ingreso (char[], char[][20], int[], int[], int);
+void OrdenaDatos (char[][20],int[], int[]);
+
+void main()
+{
+    int op, count=0, puntos[tam]={0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}, dificultad[tam]={0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
+    char usuario[tam][20], pin[10];
+    char FAC[10]={"FACIL"}, MED[10]="MEDI", DIF[10]="DIFI";
+    do
+    {
+        printf("MENU\n1)Empezar\n2)Puntuacion\n3)Salir\nEscoja una opcion: ");
+        scanf("%d",&op);
+        switch(op)
+        {
+        	case 1:
+        		
+        		printf("Para escoger una dificultad, escriba su usario y uno d los tres siguientes codigos:\n");
+                printf("Facil: FACIL\nMedio:MEDI\nDificil: DIFI\n");
+                printf("Nombre de usuario: ");
+                fflush(stdin);
+                gets(usuario[count]);
+                printf("Contrasena: ");
+                gets(pin);
+                do
+                {
+            	    if (strcmp(pin,FAC)==0||strcmp(pin, MED)==0||strcmp(pin,DIF)==0)
+				    {
+				        Ingreso (pin, usuario, puntos, dificultad, count);
+				    }
+				    else
+				    {
+				    	printf("Nombre de usuario: ");
+    		            fflush(stdin);
+    		            gets(usuario[count]);
+    		            printf("Contrasena: ");
+    		            gets(pin);
+					}
+				}while(strcmp(pin,FAC)!=0||strcmp(pin, MED)!=0||strcmp(pin,DIF)!=0);
+                getch();
+            	system("cls");
+            break;
+            case 2:
+            	Puntuacion(usuario,puntos,dificultad);
+            	getch();
+            	system("cls");
+            break;
+            case 3:
+            	exit(0);
+            break;
+            default:
+            	printf("Opcion no valida, regresando a MENU...");
+            	getch();
+            	system("cls");
+            break;
+		}
+		count++;
+    }while (op!=3);
+}
+void Ingreso (char pin[10], char usuario[tam][20],int puntos[tam], int dificultad[tam], int count)
+{
+    if(strcmp(pin,"FACIL")==0)
+    {
+    	printf("Ha elegido la dificultad FACIL");
+        Facil(puntos, dificultad, count);
+    }
+    else if (strcmp(pin,"MEDI")==0)
+    {
+        printf("Ha elegido la dificultad MEDIA");
+        Medio(puntos, dificultad, count);
+    }
+    else if (strcmp(pin,"DIFI")==0)
+    {
+        printf("Ha elegido la dificultad DIFICIL");
+        Dificil(puntos, dificultad, count);
+    }
+    main();
+    
+}
+void Facil (int puntos[tam], int dificultad[tam], int count)
+{
+	int buenas[21]={1,2,0,1,2,1,2,0,1,2,1,2,0,1,2,1,2,0,1,2,1};//aquie pones las respuestas correctas
+    int i,j,k,respondio;
+    int pregunta[21]={1,2,0,1,2,1,2,0,1,2,1,2,0,1,2,1,2,0,1,2,1};
+    srand(time(NULL));
+	int Selrand;
+	char preguntas[25][100]={"pregunta", //AQui van preguntas
+                             "pregunta",
+                             "pregunta",
+                             "pregunta",
+                             "pregunta",
+                             "pregunta",
+                             "pregunta",
+                             "pregunta",
+                             "pregunta",
+                             "pregunta",
+                             "pregunta",
+                             "pregunta",
+                             "pregunta",
+                             "pregunta",
+                             "pregunta",
+                             "pregunta",
+                             "pregunta",
+                             "pregunta",
+                             "pregunta",
+                             "pregunta",
+                             "pregunta",
+                             "pregunta"};
+    char respuestas[25][3][60]={//aqui van respuestas
+                               {"R1","R2","R3"},
+                               {"R1","R2","R3"},
+                               {"R1","R2","R3"},
+                               {"R1","R2","R3"},
+                               {"R1","R2","R3"},
+                               {"R1","R2","R3"},
+                               {"R1","R2","R3"},
+                               {"R1","R2","R3"},
+                               {"R1","R2","R3"},
+                               {"R1","R2","R3"},
+                               {"R1","R2","R3"},
+                               {"R1","R2","R3"},
+                               {"R1","R2","R3"},
+                               {"R1","R2","R3"},
+                               {"R1","R2","R3"},
+                               {"R1","R2","R3"},
+                               {"R1","R2","R3"},
+                               {"R1","R2","R3"},
+                               {"R1","R2","R3"},
+                               {"R1","R2","R3"},
+                               {"R1","R2","R3"},
+                               {"R1","R2","R3"}};
+	
+	Selrand=rand()%20;
+	k=Selrand;
+	for (i=0;i<10;i++)
+	{
+		if(k>20)
+		{
+			k=0;
+		}
+		printf("%d  %d  %s\n",i+1,k,preguntas[k]);
+		for (j=0;j<3;j++)
+		{
+			printf("%s\n",respuestas[k][j]);
+		}
+		printf("Respuesta: ");
+		scanf("%d",&respondio);
+		if((respondio-1)==buenas[pregunta[k]])
+		{
+			printf("Correcto\n");
+			puntos=puntos+100;
+		}
+		else
+		{
+			printf("Incorrecto\n");
+		}
+		k++;		
+	}
+	getch();
+	system("cls");
+}
+void Dificil (int puntos[tam], int dificultad[tam], int count)
+{
+	int buenas[61]={1,2,0,1,2,1,2,0,1,2,1,2,0,1,2,1,2,0,1,2,
+                    1,2,0,1,2,1,2,0,1,2,1,2,0,1,2,1,2,0,1,2,
+                    1,2,0,1,2,1,2,0,1,2,1,2,0,1,2,1,2,0,1,2};//aquie pones las respuestas correctas
+    int i,j,k,respondio;
+    int pregunta[61]={1,2,0,1,2,1,2,0,1,2,1,2,0,1,2,1,2,0,1,2,
+                    1,2,0,1,2,1,2,0,1,2,1,2,0,1,2,1,2,0,1,2,
+                    1,2,0,1,2,1,2,0,1,2,1,2,0,1,2,1,2,0,1,2};
+    srand(time(NULL));
+	int Selrand, op;
+	char preguntas[65][100]={"pregunta", 
+                             "pregunta",
+                             "pregunta",
+                             "pregunta",
+                             "pregunta",
+                             "pregunta",
+                             "pregunta",
+                             "pregunta",
+                             "pregunta",
+                             "pregunta",
+                             "pregunta",
+                             "pregunta",
+                             "pregunta",
+                             "pregunta",
+                             "pregunta",
+                             "pregunta",
+                             "pregunta",
+                             "pregunta",
+                             "pregunta",
+                             "pregunta",
+                             "pregunta",
+                             "pregunta",
+                             "pregunta",
+                             "pregunta",
+                             "pregunta",
+                             "pregunta",
+                             "pregunta",
+                             "pregunta",
+                             "pregunta",
+                             "pregunta",
+                             "pregunta",
+                             "pregunta",
+                             "pregunta",
+                             "pregunta",
+                             "pregunta",
+                             "pregunta",
+                             "pregunta",
+                             "pregunta",
+                             "pregunta",
+                             "pregunta",
+                             "pregunta",
+                             "pregunta",
+                             "pregunta",
+                             "pregunta",
+                             "pregunta",
+                             "pregunta",
+                             "pregunta",
+                             "pregunta",
+                             "pregunta",
+                             "pregunta",
+                             "pregunta",
+                             "pregunta",
+                             "pregunta",
+                             "pregunta",
+                             "pregunta",
+                             "pregunta",
+                             "pregunta",
+                             "pregunta",
+                             "pregunta",
+                             "pregunta",
+                             "pregunta"};
+    char respuestas[65][3][60]={//aqui van respuestas
+                               {"R1","R2","R3"},
+                               {"R1","R2","R3"},
+                               {"R1","R2","R3"},
+                               {"R1","R2","R3"},
+                               {"R1","R2","R3"},
+                               {"R1","R2","R3"},
+                               {"R1","R2","R3"},
+                               {"R1","R2","R3"},
+                               {"R1","R2","R3"},
+                               {"R1","R2","R3"},
+                               {"R1","R2","R3"},
+                               {"R1","R2","R3"},
+                               {"R1","R2","R3"},
+                               {"R1","R2","R3"},
+                               {"R1","R2","R3"},
+                               {"R1","R2","R3"},
+                               {"R1","R2","R3"},
+                               {"R1","R2","R3"},
+                               {"R1","R2","R3"},
+                               {"R1","R2","R3"},
+                               {"R1","R2","R3"},
+                               {"R1","R2","R3"},
+                               {"R1","R2","R3"},
+                               {"R1","R2","R3"},
+                               {"R1","R2","R3"},
+                               {"R1","R2","R3"},
+                               {"R1","R2","R3"},
+                               {"R1","R2","R3"},
+                               {"R1","R2","R3"},
+                               {"R1","R2","R3"},
+                               {"R1","R2","R3"},
+                               {"R1","R2","R3"},
+                               {"R1","R2","R3"},
+                               {"R1","R2","R3"},
+                               {"R1","R2","R3"},
+                               {"R1","R2","R3"},
+                               {"R1","R2","R3"},
+                               {"R1","R2","R3"},
+                               {"R1","R2","R3"},
+                               {"R1","R2","R3"},
+                               {"R1","R2","R3"},
+                               {"R1","R2","R3"},
+                               {"R1","R2","R3"},
+                               {"R1","R2","R3"},
+                               {"R1","R2","R3"},
+                               {"R1","R2","R3"},
+                               {"R1","R2","R3"},
+                               {"R1","R2","R3"},
+                               {"R1","R2","R3"},
+                               {"R1","R2","R3"},
+                               {"R1","R2","R3"},
+                               {"R1","R2","R3"},
+                               {"R1","R2","R3"},
+                               {"R1","R2","R3"},
+                               {"R1","R2","R3"},
+                               {"R1","R2","R3"},
+                               {"R1","R2","R3"},
+                               {"R1","R2","R3"},
+                               {"R1","R2","R3"},
+                               {"R1","R2","R3"},
+                               {"R1","R2","R3"}};
+	
+	Selrand=rand()%20;
+	k=Selrand;
+	for (i=0;i<30;i++)
+	{
+		if(k>60)
+		{
+			k=0;
+		}
+		printf("%d  %d  %s\n",i+1,k,preguntas[k]);
+		for (j=0;j<3;j++)
+		{
+			printf("%s\n",respuestas[k][j]);
+		}
+		printf("Respuesta: ");
+		scanf("%d",&respondio);
+		if((respondio-1)==buenas[pregunta[k]])
+		{
+			printf("Correcto\n");
+			puntos=puntos+100;
+		}
+		else
+		{
+			printf("Incorrecto\n");
+			puntos=puntos-100;
+		}
+		k++;		
+	}
+	getch();
+	system("cls");
+}
+void Medio (int puntos[tam], int dificultad[tam], int count)
+{
+	int buenas[41]={1,2,0,1,2,1,2,0,1,2,1,2,0,1,2,1,2,0,1,2,
+                    1,2,0,1,2,1,2,0,1,2,1,2,0,1,2,1,2,0,1,2};//aquie pones las respuestas correctas
+    int i,j,k,respondio;
+    int pregunta[41]={1,2,0,1,2,1,2,0,1,2,1,2,0,1,2,1,2,0,1,2,
+                    1,2,0,1,2,1,2,0,1,2,1,2,0,1,2,1,2,0,1,2};
+    srand(time(NULL));
+	int Selrand, op;
+	char preguntas[45][100]={"pregunta", //AQui van preguntas
+                             "pregunta",
+                             "pregunta",
+                             "pregunta",
+                             "pregunta",
+                             "pregunta",
+                             "pregunta",
+                             "pregunta",
+                             "pregunta",
+                             "pregunta",
+                             "pregunta",
+                             "pregunta",
+                             "pregunta",
+                             "pregunta",
+                             "pregunta",
+                             "pregunta",
+                             "pregunta",
+                             "pregunta",
+                             "pregunta",
+                             "pregunta",
+                             "pregunta",
+                             "pregunta",
+                             "pregunta",
+                             "pregunta",
+                             "pregunta",
+                             "pregunta",
+                             "pregunta",
+                             "pregunta",
+                             "pregunta",
+                             "pregunta",
+                             "pregunta",
+                             "pregunta",
+                             "pregunta",
+                             "pregunta",
+                             "pregunta",
+                             "pregunta",
+                             "pregunta",
+                             "pregunta",
+                             "pregunta",
+                             "pregunta",
+                             "pregunta",
+                             "pregunta",
+                             "pregunta"};
+    char respuestas[45][3][60]={//aqui van respuestas
+                               {"R1","R2","R3"},
+                               {"R1","R2","R3"},
+                               {"R1","R2","R3"},
+                               {"R1","R2","R3"},
+                               {"R1","R2","R3"},
+                               {"R1","R2","R3"},
+                               {"R1","R2","R3"},
+                               {"R1","R2","R3"},
+                               {"R1","R2","R3"},
+                               {"R1","R2","R3"},
+                               {"R1","R2","R3"},
+                               {"R1","R2","R3"},
+                               {"R1","R2","R3"},
+                               {"R1","R2","R3"},
+                               {"R1","R2","R3"},
+                               {"R1","R2","R3"},
+                               {"R1","R2","R3"},
+                               {"R1","R2","R3"},
+                               {"R1","R2","R3"},
+                               {"R1","R2","R3"},
+                               {"R1","R2","R3"},
+                               {"R1","R2","R3"},
+                               {"R1","R2","R3"},
+                               {"R1","R2","R3"},
+                               {"R1","R2","R3"},
+                               {"R1","R2","R3"},
+                               {"R1","R2","R3"},
+                               {"R1","R2","R3"},
+                               {"R1","R2","R3"},
+                               {"R1","R2","R3"},
+                               {"R1","R2","R3"},
+                               {"R1","R2","R3"},
+                               {"R1","R2","R3"},
+                               {"R1","R2","R3"},
+                               {"R1","R2","R3"},
+                               {"R1","R2","R3"},
+                               {"R1","R2","R3"},
+                               {"R1","R2","R3"},
+                               {"R1","R2","R3"},
+                               {"R1","R2","R3"},
+                               {"R1","R2","R3"},
+                               {"R1","R2","R3"},
+                               {"R1","R2","R3"},
+                               {"R1","R2","R3"}};
+	
+	Selrand=rand()%40;
+	k=Selrand;
+		for (i=0;i<20;i++)
+	{
+		if(k>40)
+		{
+			k=0;
+		}
+		printf("%d  %d  %s\n",i+1,k,preguntas[k]);
+		for (j=0;j<3;j++)
+		{
+			printf("%s\n",respuestas[k][j]);
+		}
+		printf("Respuesta: ");
+		scanf("%d",&respondio);
+		if((respondio-1)==buenas[pregunta[k]])
+		{
+			printf("Correcto\n");
+			puntos=puntos+100;
+		}
+		else
+		{
+			printf("Incorrecto\n");
+			puntos=puntos-50;
+		}
+		k++;		
+	}
+	getch();
+	system("cls");
+}
+void Puntuacion (char usuario[tam][20],int puntos[tam], int dificultad[tam])
+{
+	int op, i;
+	char DIF[30];
+	do
+	{
+		
+		if(dificultad[i]==0)
+		{
+			strcpy(DIF,"INDEFINIDO");
+		}
+		else if(dificultad[i]==1)
+		{
+			strcpy(DIF,"FACIL");
+		}
+		else if (dificultad[i]==2)
+		{
+			strcpy(DIF,"MEDIO");
+		}
+		else
+		{
+			strcpy(DIF,"DIFICIL");
+		}		
+		printf("\tNOMBRE\t\tDIFICULTAD\t\tPUNTUACION\n\n");
+		printf("\t%s\t\t%s\t\t%d",usuario,DIF,puntos);
+		printf("\nQue accion desea realizar\n1. cambiar nombre de usuario\n2.Eliminar puntuacion\n3.regresar al menu\nEleccion: ");
+		scanf("%d",&op);
+		switch (op)
+		{
+			case 1:
+				getch();
+				system("cls");
+        	break;
+        	case 2:
+        		getch();
+				system("cls");
+			break;
+			case 3:
+				getch();
+				system("cls");
+			break;
+			default:
+				printf("Por favor ingrese una opcion valida.");
+				getch();
+				system("cls");
+			break;
+		}
+	}while(op!=3);
+}
+void OrdenaDatos (char usuario[][20],int puntos[], int dificultad[])
+{
+	char USU;
+  int cont=0,num,i,j=0,k;
+  for (i=0; i<tam; i++)
+  {
+      printf("Introduce el valor [%d]: ", i+1);
+      scanf("%d",&v_original[i]);
+  }
+  for (i=0;i<tam;i++)
+  {
+  	for(j=0;j<tam;j++)
+  	{
+   		if (v_original[j]>v_original[i])
+   		{
+   			num=v_original[i];
+   			v_original[i]=v_original[j];
+   			v_original[j]=num;
+   			dificultad[i]=vidf[i];
+   			vdif[i]=vdif[j];
+   			vidf[j]=dificultad[i];
+   			USU=usuario[i];
+   			usuario[i]=usuario[j];
+   			usuario[i]=USU;
+		}
+	}    
+}
+}
